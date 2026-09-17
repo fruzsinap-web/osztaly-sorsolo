@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎲 Osztály Sorsoló</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .card {
+            background-color: #1e293b;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #334155;
+        }
+        h1 {
+            color: #38bdf8;
+            margin-top: 0;
+            font-size: 22pt;
+        }
+        p {
+            color: #94a3b8;
+            font-size: 12pt;
+        }
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        label {
+            font-size: 11pt;
+            color: #cbd5e1;
+        }
+        select {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: white;
+            font-size: 11pt;
+        }
+        button {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 14pt;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+        }
+        button:hover {
+            background-color: #0369a1;
+            transform: translateY(-2px);
+        }
+        .results-box {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            min-height: 60px;
+        }
+        .badge {
+            background: #0284c7;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 18pt;
+            font-weight: bold;
+            animation: popIn 0.3s ease-out forwards;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🎲 Szerencse Sorsoló</h1>
+        <p>21 fős osztály (sorszámok alapján)</p>
+
+        <div class="controls">
+            <label for="count">Hány embert sorsoljunk?</label>
+            <select id="count">
+                <option value="3">3 fő</option>
+                <option value="4">4 fő</option>
+                <option value="5" selected>5 fő</option>
+                <option value="6">6 fő</option>
+            </select>
+        </div>
+
+        <button onclick="draw()">🎲 SORSOLÁS!</button>
+
+        <div class="results-box" id="results"></div>
+    </div>
+
+    <script>
+        function draw() {
+            const count = parseInt(document.getElementById('count').value);
+            let numbers = [];
+            for (let i = 1; i <= 21; i++) numbers.push(i);
+
+            // Fisher-Yates keverés
+            for (let i = numbers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+            }
+
+            let selected = numbers.slice(0, count).sort((a, b) => a - b);
+            const container = document.getElementById('results');
+            container.innerHTML = '';
+
+            selected.forEach((num, index) => {
+                setTimeout(() => {
+                    const badge = document.createElement('div');
+                    badge.className = 'badge';
+                    badge.innerText = num + '. tanuló';
+                    container.appendChild(badge);
+                }, index * 150); // Animált egymás utáni megjelenés
+            });
+        }
+    </script>
+
+</body>
+</html>
